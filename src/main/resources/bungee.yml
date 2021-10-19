@@ -1,0 +1,4 @@
+name: GaryTheGatekeeper
+version: '${version}'
+main: fhsmc.minecraft.gary.GaryTheGatekeeper
+description: Whitelist handler for FHSMC
