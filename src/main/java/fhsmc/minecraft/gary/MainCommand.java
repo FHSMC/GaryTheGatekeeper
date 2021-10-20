@@ -6,10 +6,10 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Locale;
 
-public class WhitelistCommand extends Command {
+public class MainCommand extends Command {
 
-    public WhitelistCommand() {
-        super("Whitelist");
+    public MainCommand() {
+        super("gary");
     }
 
     @Override

@@ -36,7 +36,7 @@ public final class GaryTheGatekeeper extends Plugin {
             Storage.open(dataFolder + "/whitelist.db");
 
             getProxy().getPluginManager().registerListener(this, new Listeners());
-            getProxy().getPluginManager().registerCommand(this, new WhitelistCommand());
+            getProxy().getPluginManager().registerCommand(this, new MainCommand());
         } catch (Exception e) {
             getProxy().getLogger().warning("Gary experienced an error while starting, so he's disabling himself.");
             onDisable();
