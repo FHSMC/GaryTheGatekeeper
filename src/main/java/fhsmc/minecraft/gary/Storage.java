@@ -9,7 +9,7 @@ public class Storage {
     private static Connection conn = null;
     private static Statement statement = null;
 
-    public static void open(String databaseFilePath) {
+    public static void open(String databaseFilePath) throws SQLException, ClassNotFoundException {
         try {
             Class.forName("org.sqlite.JDBC");
             conn = DriverManager.getConnection("jdbc:sqlite:" + databaseFilePath);
@@ -20,6 +20,7 @@ public class Storage {
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
+            throw e;
         }
     }
 
