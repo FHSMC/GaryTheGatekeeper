@@ -1,5 +1,6 @@
 package fhsmc.minecraft.gary;
 
+import fhsmc.minecraft.gary.Bot.GaryBot;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -37,6 +38,9 @@ public final class GaryTheGatekeeper extends Plugin {
 
             getProxy().getPluginManager().registerListener(this, new Listeners());
             getProxy().getPluginManager().registerCommand(this, new MainCommand());
+
+            GaryBot.run();
+
         } catch (Exception e) {
             getProxy().getLogger().warning("Gary experienced an error while starting, so he's disabling himself.");
             onDisable();
