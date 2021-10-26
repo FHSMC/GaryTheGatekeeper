@@ -16,7 +16,6 @@ repositories {
 
 dependencies {
     api 'org.xerial:sqlite-jdbc:3.36.0.3'
-    api 'com.discord4j:discord4j-core:3.2.0'
     compileOnly 'net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT'
 }
 
