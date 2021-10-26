@@ -12,11 +12,18 @@ repositories {
         name = 'sonatype'
         url = 'https://oss.sonatype.org/content/groups/public/'
     }
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 dependencies {
-    api 'org.xerial:sqlite-jdbc:3.36.0.3'
-    compileOnly 'net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT'
+    api('org.xerial:sqlite-jdbc:3.36.0.3')
+    api("net.dv8tion:JDA:4.3.0_339") {
+        exclude module: 'opus-java'
+    }
+    compileOnly('net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT')
 }
 
 def targetJavaVersion = 8
