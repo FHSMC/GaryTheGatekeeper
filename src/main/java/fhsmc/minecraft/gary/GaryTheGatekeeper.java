@@ -13,7 +13,7 @@ import java.nio.file.Files;
 
 public final class GaryTheGatekeeper extends Plugin {
 
-    private Configuration config;
+    private static Configuration config;
 
     @Override
     public void onEnable() {
@@ -62,5 +62,9 @@ public final class GaryTheGatekeeper extends Plugin {
     public void onDisable() {
         getProxy().getPluginManager().unregisterCommands(this);
         getProxy().getPluginManager().unregisterListeners(this);
+    }
+
+    public static Configuration getConfig() {
+        return config;
     }
 }
