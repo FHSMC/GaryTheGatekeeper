@@ -15,12 +15,11 @@ import java.nio.file.Files;
 public final class GaryTheGatekeeper extends Plugin {
 
     private static Configuration config;
-    private static File dataFolder;
 
     @Override
     public void onEnable() {
         try {
-            dataFolder = this.getDataFolder();
+            File dataFolder = this.getDataFolder();
 
             if (!dataFolder.exists()) {
                 dataFolder.mkdirs();
@@ -50,7 +49,7 @@ public final class GaryTheGatekeeper extends Plugin {
     }
 
     public void loadConfig() throws IOException {
-        File configFile = new File(dataFolder, "config.yml");
+        File configFile = new File(getDataFolder(), "config.yml");
 
         if (!configFile.exists()) {
             try (InputStream in = getResourceAsStream("config.yml")) {
@@ -61,11 +60,6 @@ public final class GaryTheGatekeeper extends Plugin {
         }
 
         config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-    }
-
-    public static void saveConfig() throws IOException {
-        ConfigurationProvider.getProvider(YamlConfiguration.class)
-                .save(config, new File(dataFolder, "config.yml"));
     }
 
     public static Configuration getConfig() {
