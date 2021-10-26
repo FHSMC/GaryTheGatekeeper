@@ -1,11 +1,1 @@
 # Configuration for Gary The Gatekeeper
-
-discord:
-  # Discord API Token
-  token:
-
-  # The channel in which whitelisting will be conducted
-  channel: 000000000000000000
-
-  # The message that will be displayed in the whitelist channel
-  message: ""

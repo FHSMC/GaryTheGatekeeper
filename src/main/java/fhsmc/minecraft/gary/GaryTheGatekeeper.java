@@ -1,6 +1,5 @@
 package fhsmc.minecraft.gary;
 
-import fhsmc.minecraft.gary.Bot.GaryBot;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -14,7 +13,7 @@ import java.nio.file.Files;
 
 public final class GaryTheGatekeeper extends Plugin {
 
-    private static Configuration config;
+    private Configuration config;
 
     @Override
     public void onEnable() {
@@ -38,9 +37,6 @@ public final class GaryTheGatekeeper extends Plugin {
 
             getProxy().getPluginManager().registerListener(this, new Listeners());
             getProxy().getPluginManager().registerCommand(this, new MainCommand());
-
-            GaryBot.run(config);
-
         } catch (Exception e) {
             getProxy().getLogger().warning("Gary experienced an error while starting, so he's disabling himself.");
             onDisable();
@@ -60,10 +56,6 @@ public final class GaryTheGatekeeper extends Plugin {
         }
 
         config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-    }
-
-    public static Configuration getConfig() {
-        return config;
     }
 
     @Override
