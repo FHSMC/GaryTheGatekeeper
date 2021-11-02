@@ -16,12 +16,20 @@ public class Listeners implements Listener {
 
         try {
             if (!Storage.isPlayerUUIDWhitelisted(player.getUniqueId().toString())) {
-                if (!Storage.isPlayerIGNWhitelisted(player.getName())){
+                if (!Storage.isPlayerIGNWhitelisted(player.getName())) {
                     player.disconnect(new TextComponent("You are not whitelisted!"));
                 } else {
                     Storage.setUUIDFromIGN(
                             player.getName(),
                             player.getUniqueId().toString(),
+                            player.getName().startsWith(".")
+                    );
+                }
+            } else {
+                if (!Storage.isPlayerIGNWhitelisted(player.getName())) {
+                    Storage.setIGNFromUUID(
+                            player.getUniqueId().toString(),
+                            player.getName(),
                             player.getName().startsWith(".")
                     );
                 }

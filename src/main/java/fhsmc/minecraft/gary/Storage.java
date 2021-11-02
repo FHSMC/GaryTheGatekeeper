@@ -42,6 +42,13 @@ public class Storage {
         }
     }
 
+    public static void setIGNFromUUID(String uuid, String ign, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "bedrock" : "java";
+        if (conn != null && statement != null) {
+            statement.executeUpdate("UPDATE players SET " + platform + "_ign=\"" + ign + "\" WHERE " + platform + "_uuid=\"" + uuid + "\"");
+        }
+    }
+
     public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
         if (conn != null && statement != null) {
             ResultSet rs = statement.executeQuery("SELECT * FROM players WHERE discord_id=" + discord_id);
@@ -69,4 +76,6 @@ public class Storage {
         }
         return false;
     }
+
+
 }
