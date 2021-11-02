@@ -1,6 +1,7 @@
 package fhsmc.minecraft.gary;
 
 import okhttp3.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -30,11 +31,12 @@ public class GoogeOAuth {
         }
     }
 
-    public static String getNewDeviceAndUserCodes() throws IOException {
+    public static JSONObject startAuthFlow() throws IOException {
         String url = "https://oauth2.googleapis.com/device/code?client_id="
                 + Config.getString("google.client-id")
                 + "&scope=email";
         String data = post(url, "{}");
-        return data;
+        JSONObject dataObject = new JSONObject(data);
+        return dataObject;
     }
 }
