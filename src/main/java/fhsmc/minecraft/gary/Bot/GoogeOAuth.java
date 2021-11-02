@@ -1,5 +1,6 @@
-package fhsmc.minecraft.gary;
+package fhsmc.minecraft.gary.Bot;
 
+import fhsmc.minecraft.gary.Config;
 import okhttp3.*;
 import org.json.JSONObject;
 
