@@ -15,7 +15,7 @@ public class MainCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
 
-        if (args.length < 1) {
+/*        if (args.length < 1) {
             sender.sendMessage(new TextComponent("You can use the following actions: add, remove"));
         } else {
             switch (args[0].toLowerCase(Locale.ROOT)){
@@ -31,10 +31,7 @@ public class MainCommand extends Command {
                     sender.sendMessage(new TextComponent("That is not a valid action"));
                     return;
             }
-        }
-
-
-
+        }*/
 
     }
 }

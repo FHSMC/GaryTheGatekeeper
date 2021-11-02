@@ -16,7 +16,7 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, discord_id INTEGER, ign TEXT, uuid TEXT)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, discord_id INTEGER, java_ign TEXT, java_uuid TEXT, bedrock_ign TEXT, bedrock_uuid TEXT)");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
@@ -24,35 +24,49 @@ public class Storage {
         }
     }
 
-    public static void addWhitelistEntry(String IGN) {
-        try {
-            if (conn != null && statement!= null) {
-                statement.executeUpdate("INSERT INTO players (IGN) values(\"" + IGN + "\")");
+    public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "bedrock" : "java";
+        if (conn != null && statement != null) {
+            if (discordUserInWhitelist(discord_id)){
+                statement.executeUpdate("UPDATE players SET " + platform + "_ign=\"" + ign + "\" WHERE discord_id=" + discord_id);
+            } else {
+                statement.executeUpdate("INSERT INTO players (discord_id," + platform + "_ign) VALUES (" + discord_id + ",\"" + ign + "\")");
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public static boolean checkIfWhitelisted(ProxiedPlayer player) {
-        try {
-            if (conn != null && statement != null) {
-                ResultSet rs = statement.executeQuery("SELECT 1 FROM players WHERE ign=\"" + player.getDisplayName() + "\"");
-                return rs.isBeforeFirst();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static void setUUIDFromIGN(String ign, String uuid, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "bedrock" : "java";
+        if (conn != null && statement != null) {
+            statement.executeUpdate("UPDATE players SET " + platform + "_uuid=\"" + uuid + "\" WHERE " + platform + "_ign=\"" + ign + "\"");
+        }
+    }
+
+    public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
+        if (conn != null && statement != null) {
+            ResultSet rs = statement.executeQuery("SELECT * FROM players WHERE discord_id=" + discord_id);
+            return rs.isBeforeFirst();
         }
         return false;
     }
 
-    public static void removeWhitelistEntry(String player) {
-        try {
-            if (conn != null && statement!= null) {
-                statement.executeUpdate("DELETE FROM players WHERE ign=\"" + player + "\"");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static boolean isPlayerUUIDWhitelisted(String uuid) throws SQLException {
+        if (conn != null && statement != null) {
+            return (
+                    statement.executeQuery("SELECT * FROM players WHERE java_uuid=\"" + uuid + "\"").isBeforeFirst()
+                    || statement.executeQuery("SELECT * FROM players WHERE bedrock_uuid=\"" + uuid + "\"").isBeforeFirst()
+            );
         }
+        return false;
+    }
+
+    public static boolean isPlayerIGNWhitelisted(String ign) throws SQLException {
+        if (conn != null && statement != null) {
+            return (
+                    statement.executeQuery("SELECT * FROM players WHERE java_ign=\"" + ign + "\"").isBeforeFirst()
+                    || statement.executeQuery("SELECT * FROM players WHERE bedrock_ign=\"" + ign + "\"").isBeforeFirst()
+            );
+        }
+        return false;
     }
 }
