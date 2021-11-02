@@ -16,7 +16,7 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, ign TEXT NOT NULL, uuid TEXT)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, discord_id INTEGER, ign TEXT, uuid TEXT)");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
