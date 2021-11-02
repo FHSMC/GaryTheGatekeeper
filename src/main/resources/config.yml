@@ -2,3 +2,5 @@ discord:
   token: T0K3N
   channel: 000000000000000000
   message-id: 000000000000000000
+google:
+  client-id: abc
