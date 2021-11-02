@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class GoogeOAuth {
+public class GoogleOAuth {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final OkHttpClient httpClient = new OkHttpClient();
 
@@ -39,5 +39,16 @@ public class GoogeOAuth {
         String data = post(url, "{}");
         JSONObject dataObject = new JSONObject(data);
         return dataObject;
+    }
+
+    public static JSONObject pollGoogleAuth(String deviceCode) throws IOException {
+        String url = "https://oauth2.googleapis.com/token"
+                + "?client_id=" + Config.getString("google.client-id")
+                + "&client_secret=" + Config.getString("google.client-secret")
+                + "&device_code=" + deviceCode
+                + "&grant_type=urn:ietf:params:oauth:grant-type:device_code";
+
+        String data = post(url, "{}");
+        return new JSONObject(data);
     }
 }
