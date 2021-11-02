@@ -24,6 +24,14 @@ public class Storage {
         }
     }
 
+    public static void addDiscordId(String discord_id) throws SQLException {
+        if (conn != null && statement != null) {
+            if (discordUserInWhitelist(discord_id)) {
+                statement.executeUpdate("INSERT INTO players (discord_id) VALUES (" + discord_id + ")");
+            }
+        }
+    }
+
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
         String platform = bedrock ? "bedrock" : "java";
         if (conn != null && statement != null) {
