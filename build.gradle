@@ -23,6 +23,8 @@ dependencies {
     api("net.dv8tion:JDA:4.3.0_339") {
         exclude module: 'opus-java'
     }
+    api('org.json:json:20210307')
+    compileOnly("com.squareup.okhttp3:okhttp:3.13.0")
     compileOnly('net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT')
 }
 
