@@ -1,5 +1,6 @@
 package fhsmc.minecraft.gary.Bot;
 
+import fhsmc.minecraft.gary.Config;
 import fhsmc.minecraft.gary.GaryTheGatekeeper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -16,7 +17,7 @@ public class GaryBot extends ListenerAdapter {
 
     public static void run() throws LoginException {
         JDABuilder botBuilder = JDABuilder.createLight(
-                GaryTheGatekeeper.getConfig().getString("discord.token"),
+                Config.getString("discord.token"),
                 Collections.emptyList()
         );
 

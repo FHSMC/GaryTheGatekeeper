@@ -32,8 +32,6 @@ public final class GaryTheGatekeeper extends Plugin {
                 throw e;
             }
 
-            System.out.println(config.getString("test_value"));
-
             Storage.open(dataFolder + "/whitelist.db");
 
             getProxy().getPluginManager().registerListener(this, new Listeners());
@@ -58,8 +56,7 @@ public final class GaryTheGatekeeper extends Plugin {
                 e.printStackTrace();
             }
         }
-
-        config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
+        Config.loadConfig(configFile);
     }
 
     @Override
