@@ -24,6 +24,7 @@ dependencies {
         exclude module: 'opus-java'
     }
     api('org.json:json:20210307')
+    api('com.auth0:java-jwt:3.18.2')
     compileOnly("com.squareup.okhttp3:okhttp:3.13.0")
     compileOnly('net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT')
 }

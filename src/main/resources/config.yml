@@ -4,3 +4,5 @@ discord:
   message-id: 000000000000000000
 google:
   client-id: abc
+  client-secret: abc
+  email-suffix: @example.com
