@@ -49,6 +49,7 @@ public class GoogleOAuth {
                 + "&grant_type=urn:ietf:params:oauth:grant-type:device_code";
 
         String data = post(url, "{}");
-        return new JSONObject(data);
+        JSONObject dataObject = new JSONObject(data);
+        return dataObject;
     }
 }
