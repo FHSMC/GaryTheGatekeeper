@@ -26,7 +26,7 @@ public class Storage {
 
     public static void addDiscordId(String discord_id) throws SQLException {
         if (conn != null && statement != null) {
-            if (discordUserInWhitelist(discord_id)) {
+            if (!discordUserInWhitelist(discord_id)) {
                 statement.executeUpdate("INSERT INTO players (discord_id) VALUES (" + discord_id + ")");
             }
         }
