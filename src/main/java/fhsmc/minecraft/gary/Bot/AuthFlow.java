@@ -2,12 +2,9 @@ package fhsmc.minecraft.gary.Bot;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fhsmc.minecraft.gary.Config;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -76,7 +73,7 @@ public class AuthFlow {
                 throw new IOException("Error when polling Google servers: " + token_data.get("error"));
             } else {
                 if (token_data.has("id_token")) {
-                    postRecieveToken(token_data.getString("id_token"));
+                    postReceiveToken(token_data.getString("id_token"));
                     exec.cancel();
                     exec.purge();
                 }
@@ -84,13 +81,13 @@ public class AuthFlow {
         } catch (IOException e) {
             e.printStackTrace();
             _event.getHook().editOriginalEmbeds(
-                    InfoEmbed.fromString(":warning: Woops, looks like we got an error from Google servers! Contact staff for help.")
+                    InfoEmbed.fromString(":warning: Whoops, looks like we got an error from Google servers! Contact staff for help.")
                             .build()
             ).queue();
         }
     }
 
-    private void postRecieveToken(String token) {
+    private void postReceiveToken(String token) {
         String email;
         try {
             DecodedJWT jwt = JWT.decode(token);
@@ -98,7 +95,7 @@ public class AuthFlow {
         } catch (JWTDecodeException exception){
             exception.printStackTrace();
             _event.getHook().editOriginalEmbeds(
-                    InfoEmbed.fromString(":warning: Woops, looks like there was a problem with the data we got from Google servers. Contact staff for help.")
+                    InfoEmbed.fromString(":warning: Whoops, looks like there was a problem with the data we got from Google servers. Contact staff for help.")
                             .build()
             ).queue();
             return;
