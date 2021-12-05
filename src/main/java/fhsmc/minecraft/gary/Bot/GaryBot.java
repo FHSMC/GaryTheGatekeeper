@@ -2,10 +2,10 @@ package fhsmc.minecraft.gary.Bot;
 
 import fhsmc.minecraft.gary.Config;
 import fhsmc.minecraft.gary.Storage;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -17,12 +17,13 @@ import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GaryBot extends ListenerAdapter {
 
     private static JDA client;
 
-    private static HashMap<String, AuthFlow> authFlows = new HashMap<String, AuthFlow>();
+    private static final HashMap<String, AuthFlow> authFlows = new HashMap<>();
 
     public static void run() throws LoginException, InterruptedException {
         JDABuilder botBuilder = JDABuilder.createLight(
@@ -51,7 +52,10 @@ public class GaryBot extends ListenerAdapter {
                 )
         );
 
-        client.getGuildById(String.valueOf(Config.get("discord.guild"))).updateCommands().addCommands(command).queue();
+        Guild guild = client.getGuildById(String.valueOf(Config.get("discord.guild")));
+        if (guild != null){
+            guild.updateCommands().addCommands(command).queue();
+        }
     }
 
     @Override
@@ -71,7 +75,7 @@ public class GaryBot extends ListenerAdapter {
                     return;
                 }
 
-                switch (event.getSubcommandName()) {
+                switch (Objects.requireNonNull(event.getSubcommandName())) {
                     case "info":
                         event.getHook().editOriginalEmbeds(
                                 InfoEmbed.fromString("Gary is the server gate system. We are allowing "
@@ -88,11 +92,11 @@ public class GaryBot extends ListenerAdapter {
                         System.out.println(event.getCommandString());
                         Storage.setIGNFromDiscord(
                                 event.getUser().getId(),
-                                event.getOption("username").getAsString(),
-                                event.getOption("platform").getAsString().equals("bedrock")
+                                Objects.requireNonNull(event.getOption("username")).getAsString(),
+                                Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
                         );
                         event.getHook().editOriginalEmbeds(
-                                InfoEmbed.fromString(event.getOption("platform").getAsString() + " username set to " + event.getOption("username").getAsString())
+                                InfoEmbed.fromString(Objects.requireNonNull(event.getOption("platform")).getAsString() + " username set to " + Objects.requireNonNull(event.getOption("username")).getAsString())
                                         .build()
                         ).queue();
                     case "remove":
