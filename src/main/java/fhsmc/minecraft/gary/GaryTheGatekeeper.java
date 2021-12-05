@@ -2,9 +2,6 @@ package fhsmc.minecraft.gary;
 
 import fhsmc.minecraft.gary.Bot.GaryBot;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +10,6 @@ import java.nio.file.Files;
 
 
 public final class GaryTheGatekeeper extends Plugin {
-
-    private static Configuration config;
 
     @Override
     public void onEnable() {
@@ -65,7 +60,4 @@ public final class GaryTheGatekeeper extends Plugin {
         getProxy().getPluginManager().unregisterListeners(this);
     }
 
-    public static Configuration getConfig() {
-        return config;
-    }
 }
