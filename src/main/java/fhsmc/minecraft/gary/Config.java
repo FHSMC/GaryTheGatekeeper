@@ -15,6 +15,9 @@ public class Config {
         config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configPath);
     }
 
+    public static Object get(String key) {
+        return config.get(key);
+    }
     public static String getString(String key) {
         return config.getString(key);
     }

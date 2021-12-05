@@ -2,11 +2,16 @@ package fhsmc.minecraft.gary.Bot;
 
 import fhsmc.minecraft.gary.Config;
 import fhsmc.minecraft.gary.Storage;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
@@ -19,7 +24,7 @@ public class GaryBot extends ListenerAdapter {
 
     private static HashMap<String, AuthFlow> authFlows = new HashMap<String, AuthFlow>();
 
-    public static void run() throws LoginException {
+    public static void run() throws LoginException, InterruptedException {
         JDABuilder botBuilder = JDABuilder.createLight(
                 Config.getString("discord.token"),
                 Collections.emptyList()
@@ -28,14 +33,34 @@ public class GaryBot extends ListenerAdapter {
         botBuilder.addEventListeners(new GaryBot());
         botBuilder.setActivity(Activity.playing("around with the whitelist"));
 
-        client = botBuilder.build();
+        client = botBuilder.build().awaitReady();
+
+        CommandData command = new CommandData("whitelist", "Access the server whitelist");
+        command.addSubcommands(
+                new SubcommandData("info", "Show info about the whitelist"),
+                new SubcommandData("set", "Set your Java or Bedrock username in the whitelist").addOptions(
+                        new OptionData(OptionType.STRING, "platform", "Is this a Java or Bedrock account?", true)
+                                .addChoice("Java", "java")
+                                .addChoice("Bedrock", "bedrock"),
+                        new OptionData(OptionType.STRING, "username", "The username of the account", true)
+                ),
+                new SubcommandData("remove", "Remove your Java or Bedrock account from the whitelist").addOptions(
+                        new OptionData(OptionType.STRING, "platform", "Which platform would you like to remove the account from?", true)
+                                .addChoice("Java", "java")
+                                .addChoice("Bedrock", "bedrock")
+                )
+        );
+
+        client.getGuildById(String.valueOf(Config.get("discord.guild"))).updateCommands().addCommands(command).queue();
     }
 
     @Override
-    public void onButtonClick(ButtonClickEvent event) {
-        if (event.getButton().getId().equals("start_1")) {
-            try {
-                if (!Storage.discordUserInWhitelist(event.getUser().getId())){
+    public void onSlashCommand(SlashCommandEvent event) {
+        event.deferReply().setEphemeral(true).queue();
+        try {
+            if (event.getName().equals("whitelist")) {
+
+                if (!Storage.discordUserInWhitelist(event.getUser().getId())) {
                     if (authFlows.containsKey(event.getUser().getId())) {
                         event.reply("Hey! You've already started the process! If you dismissed the message, wait a few minutes and try again.")
                                 .setEphemeral(true)
@@ -43,16 +68,44 @@ public class GaryBot extends ListenerAdapter {
                     } else {
                         authFlows.put(event.getUser().getId(), new AuthFlow(event));
                     }
-                } else {
-                    whitelistProcess(event);
+                    return;
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+
+                switch (event.getSubcommandName()) {
+                    case "info":
+                        event.getHook().editOriginalEmbeds(
+                                InfoEmbed.fromString("Gary is the server gate system. We are allowing "
+                                                + "users to whitelist themselves using this, and are "
+                                                + "restricted to one of each platform, Java and Bedrock. "
+                                                + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
+                                                + " those with a real school email. If you wish to use an alt, or are outside of the school"
+                                                + ", then contact staff.")
+                                        .addField("Commands", "/whitelist add - Add one of your accounts to the whitelist\n"
+                                                + "/whitelist remove - Remove one of your accounts from the whitelist", true)
+                                        .build()
+                        ).queue();
+                    case "set":
+                        System.out.println(event.getCommandString());
+                        Storage.setIGNFromDiscord(
+                                event.getUser().getId(),
+                                event.getOption("username").getAsString(),
+                                event.getOption("platform").getAsString().equals("bedrock")
+                        );
+                        event.getHook().editOriginalEmbeds(
+                                InfoEmbed.fromString(event.getOption("platform").getAsString() + " username set to " + event.getOption("username").getAsString())
+                                        .build()
+                        ).queue();
+                    case "remove":
+                        break;
+                }
             }
+
+        } catch(SQLException e){
+            e.printStackTrace();
         }
     }
 
-    public static void authFlowComplete(ButtonClickEvent event, boolean authorized, String email){
+    public static void authFlowComplete(SlashCommandEvent event, boolean authorized, String email){
         authFlows.remove(event.getUser().getId());
         if (authorized) {
             try {
@@ -61,13 +114,10 @@ public class GaryBot extends ListenerAdapter {
                 event.getHook().sendMessage("There was an issue storing some information. Contact staff for help.").setEphemeral(true).queue();
                 e.printStackTrace();
             }
-            event.getHook().sendMessage("You have been authorized").setEphemeral(true).queue();
+            event.getHook().sendMessage("You have been authorized. Run the command again to whitelist your account.").setEphemeral(true).queue();
         } else {
             event.getHook().sendMessage("The email `" + email + "` is not a valid school email. If you believe this to be an error, please contact staff for help.").setEphemeral(true).queue();
         }
     }
 
-    public static void whitelistProcess(ButtonClickEvent event) {
-        event.reply("Heyyy, you're approved!").setEphemeral(true).queue();
-    }
 }

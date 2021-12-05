@@ -6,6 +6,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fhsmc.minecraft.gary.Config;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyAction;
 import org.json.JSONObject;
 
@@ -15,14 +16,14 @@ import java.util.TimerTask;
 
 public class AuthFlow {
 
-    private ButtonClickEvent _event;
+    private SlashCommandEvent _event;
 
     private String deviceCode;
     private String accessToken;
 
     private Timer exec;
 
-    public AuthFlow(ButtonClickEvent event) {
+    public AuthFlow(SlashCommandEvent event) {
         _event = event;
         JSONObject data = null;
         try {
