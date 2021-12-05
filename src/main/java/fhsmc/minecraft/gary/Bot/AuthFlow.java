@@ -40,7 +40,7 @@ public class AuthFlow {
                 public void run() {
                     pollTask();
                 }
-            }, interval * 1000, interval * 1000);
+            }, interval * 1000L, interval * 1000L);
 
             exec.schedule(new TimerTask() {
                 @Override
@@ -48,7 +48,7 @@ public class AuthFlow {
                     exec.cancel();
                     exec.purge();
                 }
-            }, expires * 1000);
+            }, expires * 1000L);
 
             _event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
                     + "Follow the instructions below:\n\n"
@@ -101,10 +101,6 @@ public class AuthFlow {
             return;
         }
 
-        if (email != null && email.endsWith(Config.getString("google.email-suffix"))) {
-            GaryBot.authFlowComplete(_event, true, email);
-        } else {
-            GaryBot.authFlowComplete(_event, false, email);
-        }
+        GaryBot.authFlowComplete(_event, email.endsWith(Config.getString("google.email-suffix")), email);
     }
 }
