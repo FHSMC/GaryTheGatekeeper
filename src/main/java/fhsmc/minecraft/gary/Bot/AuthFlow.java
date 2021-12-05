@@ -53,15 +53,17 @@ public class AuthFlow {
                 }
             }, expires * 1000);
 
-            _event.reply("To get whitelisted, we need to make sure you have a valid school email. "
+            _event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
                     + "Follow the instructions below:\n\n"
-                    + "Go to "
+                    + "· Go to "
                     + url
                     + " and enter the following code: "
                     + "**`" + userCode + "`**\n\n"
-                    + "When you have complete logging in there, you will be able to whitelist your Minecraft account.\n"
+                    + "· Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
                     + "*We do not store your email or anything else about your Google account. "
-                    + "This only needs to be done once to confirms you have a valid school email.*").setEphemeral(true).queue();
+                    + "This only needs to be done once to confirm you have a valid school email.*").build()
+            ).queue();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +83,10 @@ public class AuthFlow {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            _event.getHook().sendMessage("Woops, looks like we got an error from Google servers! Contact staff for help.").setEphemeral(true).queue();
+            _event.getHook().editOriginalEmbeds(
+                    InfoEmbed.fromString(":warning: Woops, looks like we got an error from Google servers! Contact staff for help.")
+                            .build()
+            ).queue();
         }
     }
 
@@ -92,7 +97,10 @@ public class AuthFlow {
             email = jwt.getClaim("email").toString().replace("\"", "");
         } catch (JWTDecodeException exception){
             exception.printStackTrace();
-            _event.getHook().sendMessage("Woops, looks like there was a problem with the data we got from Google servers. Contact staff for help.").setEphemeral(true).queue();
+            _event.getHook().editOriginalEmbeds(
+                    InfoEmbed.fromString(":warning: Woops, looks like there was a problem with the data we got from Google servers. Contact staff for help.")
+                            .build()
+            ).queue();
             return;
         }
 

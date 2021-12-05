@@ -64,9 +64,24 @@ public class GaryBot extends ListenerAdapter {
         try {
             if (event.getName().equals("whitelist")) {
 
+                if (event.getSubcommandName().equals("info")) {
+                    event.getHook().editOriginalEmbeds(
+                            InfoEmbed.fromString("Gary is the server gate system. We are allowing "
+                                            + "users to whitelist themselves using this, and are "
+                                            + "restricted to one of each platform, Java and Bedrock. "
+                                            + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
+                                            + " those with a real school email. If you wish to use an alt, or are outside of the school"
+                                            + ", then contact staff.")
+                                    .addField("Commands", "/whitelist add - Add one of your accounts to the whitelist\n"
+                                            + "/whitelist remove - Remove one of your accounts from the whitelist", true)
+                                    .build()
+                    ).queue();
+                    return;
+                }
+
                 if (!Storage.discordUserInWhitelist(event.getUser().getId())) {
                     if (authFlows.containsKey(event.getUser().getId())) {
-                        event.reply("Hey! You've already started the process! If you dismissed the message, wait a few minutes and try again.")
+                        event.reply(":exclamation: Hey! You've already started the process! If you dismissed the message, wait a few minutes and try again.")
                                 .setEphemeral(true)
                                 .queue();
                     } else {
@@ -75,19 +90,7 @@ public class GaryBot extends ListenerAdapter {
                     return;
                 }
 
-                switch (Objects.requireNonNull(event.getSubcommandName())) {
-                    case "info":
-                        event.getHook().editOriginalEmbeds(
-                                InfoEmbed.fromString("Gary is the server gate system. We are allowing "
-                                                + "users to whitelist themselves using this, and are "
-                                                + "restricted to one of each platform, Java and Bedrock. "
-                                                + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
-                                                + " those with a real school email. If you wish to use an alt, or are outside of the school"
-                                                + ", then contact staff.")
-                                        .addField("Commands", "/whitelist add - Add one of your accounts to the whitelist\n"
-                                                + "/whitelist remove - Remove one of your accounts from the whitelist", true)
-                                        .build()
-                        ).queue();
+                switch (event.getSubcommandName()) {
                     case "set":
                         System.out.println(event.getCommandString());
                         Storage.setIGNFromDiscord(
@@ -96,7 +99,10 @@ public class GaryBot extends ListenerAdapter {
                                 Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
                         );
                         event.getHook().editOriginalEmbeds(
-                                InfoEmbed.fromString(Objects.requireNonNull(event.getOption("platform")).getAsString() + " username set to " + Objects.requireNonNull(event.getOption("username")).getAsString())
+                                InfoEmbed.fromString(":white_check_mark: "
+                                                        + Objects.requireNonNull(event.getOption("platform")).getAsString()
+                                                        + " username set to "
+                                                        + Objects.requireNonNull(event.getOption("username")).getAsString())
                                         .build()
                         ).queue();
                     case "remove":
@@ -105,6 +111,10 @@ public class GaryBot extends ListenerAdapter {
             }
 
         } catch(SQLException e){
+            event.getHook().editOriginalEmbeds(
+                    InfoEmbed.fromString(":warning: There was an error in running that command. Please contact staff for help.")
+                            .build()
+            );
             e.printStackTrace();
         }
     }
@@ -112,15 +122,29 @@ public class GaryBot extends ListenerAdapter {
     public static void authFlowComplete(SlashCommandEvent event, boolean authorized, String email){
         authFlows.remove(event.getUser().getId());
         if (authorized) {
+
             try {
                 Storage.addDiscordId(event.getUser().getId());
             } catch (SQLException e) {
-                event.getHook().sendMessage("There was an issue storing some information. Contact staff for help.").setEphemeral(true).queue();
+                event.getHook().editOriginalEmbeds(
+                        InfoEmbed.fromString(":warning: There was an issue storing some information. Contact staff for help.")
+                                .build()
+                ).queue();
                 e.printStackTrace();
             }
-            event.getHook().sendMessage("You have been authorized. Run the command again to whitelist your account.").setEphemeral(true).queue();
+
+            event.getHook().editOriginalEmbeds(
+                    InfoEmbed.fromString(":white_check_mark: You have been authorized. You can now use the whitelist commands")
+                    .build()
+            ).queue();
+
         } else {
-            event.getHook().sendMessage("The email `" + email + "` is not a valid school email. If you believe this to be an error, please contact staff for help.").setEphemeral(true).queue();
+
+            event.getHook().editOriginalEmbeds(
+                    InfoEmbed.fromString(":no_entry: The email `" + email + "` is not a valid school email. If you believe this to be an error, please contact staff for help.")
+                            .build()
+            ).queue();
+
         }
     }
 

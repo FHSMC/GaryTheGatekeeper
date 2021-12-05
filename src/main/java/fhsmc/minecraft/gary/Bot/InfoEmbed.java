@@ -1,7 +1,6 @@
 package fhsmc.minecraft.gary.Bot;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class InfoEmbed {
 
