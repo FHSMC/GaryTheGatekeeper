@@ -13,7 +13,7 @@ import java.util.TimerTask;
 
 public class AuthFlow {
 
-    private SlashCommandEvent _event;
+    private SlashCommandEvent event;
 
     private String deviceCode;
     private String accessToken;
@@ -21,7 +21,7 @@ public class AuthFlow {
     private Timer exec;
 
     public AuthFlow(SlashCommandEvent event) {
-        _event = event;
+        this.event = event;
         JSONObject data = null;
         try {
             data = GoogleOAuth.startAuthFlow();
@@ -45,20 +45,21 @@ public class AuthFlow {
             exec.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    GaryBot.authFlowTimeout(event);
                     exec.cancel();
                     exec.purge();
                 }
             }, expires * 1000L);
 
-            _event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
+            this.event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
                     + "Follow the instructions below:\n\n"
-                    + "· Go to "
+                    + "- Go to "
                     + url
                     + " and enter the following code: "
                     + "**`" + userCode + "`**\n\n"
-                    + "· Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
+                    + "- Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
                     + "*We do not store your email or anything else about your Google account. "
-                    + "This only needs to be done once to confirm you have a valid school email.*").build()
+                    + "This only needs to be done once to confirm you have a valid school email.*\n\n").build()
             ).queue();
 
         } catch (IOException e) {
@@ -80,7 +81,7 @@ public class AuthFlow {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            _event.getHook().editOriginalEmbeds(
+            this.event.getHook().editOriginalEmbeds(
                     InfoEmbed.fromString(":warning: Whoops, looks like we got an error from Google servers! Contact staff for help.")
                             .build()
             ).queue();
@@ -94,13 +95,13 @@ public class AuthFlow {
             email = jwt.getClaim("email").toString().replace("\"", "");
         } catch (JWTDecodeException exception){
             exception.printStackTrace();
-            _event.getHook().editOriginalEmbeds(
+            this.event.getHook().editOriginalEmbeds(
                     InfoEmbed.fromString(":warning: Whoops, looks like there was a problem with the data we got from Google servers. Contact staff for help.")
                             .build()
             ).queue();
             return;
         }
 
-        GaryBot.authFlowComplete(_event, email.endsWith(Config.getString("google.email-suffix")), email);
+        GaryBot.authFlowComplete(this.event, email.endsWith(Config.getString("google.email-suffix")), email);
     }
 }
