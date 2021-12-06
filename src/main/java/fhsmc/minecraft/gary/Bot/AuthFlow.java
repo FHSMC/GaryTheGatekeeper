@@ -13,25 +13,22 @@ import java.util.TimerTask;
 
 public class AuthFlow {
 
-    private SlashCommandEvent event;
+    private final SlashCommandEvent event;
 
     private String deviceCode;
-    private String accessToken;
+
+    private JSONObject data;
 
     private Timer exec;
 
     public AuthFlow(SlashCommandEvent event) {
         this.event = event;
-        JSONObject data = null;
         try {
             data = GoogleOAuth.startAuthFlow();
 
             deviceCode = data.getString("device_code");
-            String userCode = data.getString("user_code");
             int expires = data.getInt("expires_in");
             int interval = data.getInt("interval");
-
-            String url = data.getString("verification_url");
 
             exec = new Timer();
             GoogleOAuth.pollGoogleAuth(deviceCode);
@@ -51,20 +48,24 @@ public class AuthFlow {
                 }
             }, expires * 1000L);
 
-            this.event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
-                    + "Follow the instructions below:\n\n"
-                    + "- Go to "
-                    + url
-                    + " and enter the following code: "
-                    + "**`" + userCode + "`**\n\n"
-                    + "- Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
-                    + "*We do not store your email or anything else about your Google account. "
-                    + "This only needs to be done once to confirm you have a valid school email.*\n\n").build()
-            ).queue();
+            sendFirstEmbed(this.event);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendFirstEmbed(SlashCommandEvent event) {
+        event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
+                + "Follow the instructions below:\n\n"
+                + "- Go to "
+                + this.data.getString("verification_url")
+                + " and enter the following code: "
+                + "**`" + this.data.getString("user_code") + "`**\n\n"
+                + "- Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
+                + "*We do not store your email or anything else about your Google account. "
+                + "This only needs to be done once to confirm you have a valid school email.*\n\n").build()
+        ).queue();
     }
 
     private void pollTask() {

@@ -81,9 +81,7 @@ public class GaryBot extends ListenerAdapter {
 
                 if (!Storage.discordUserInWhitelist(event.getUser().getId())) {
                     if (authFlows.containsKey(event.getUser().getId())) {
-                        event.reply(":exclamation: Hey! You've already started the process! If you dismissed the message, wait a few minutes and try again.")
-                                .setEphemeral(true)
-                                .queue();
+                        authFlows.get(event.getUser().getId()).sendFirstEmbed(event);
                     } else {
                         authFlows.put(event.getUser().getId(), new AuthFlow(event));
                     }
@@ -92,7 +90,6 @@ public class GaryBot extends ListenerAdapter {
 
                 switch (event.getSubcommandName()) {
                     case "set":
-                        System.out.println(event.getCommandString());
                         Storage.setIGNFromDiscord(
                                 event.getUser().getId(),
                                 Objects.requireNonNull(event.getOption("username")).getAsString(),
