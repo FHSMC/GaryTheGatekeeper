@@ -114,9 +114,16 @@ public class GaryBot extends ListenerAdapter {
             event.getHook().editOriginalEmbeds(
                     InfoEmbed.fromString(":warning: There was an error in running that command. Please contact staff for help.")
                             .build()
-            );
+            ).queue();
             e.printStackTrace();
         }
+    }
+
+    public static void authFlowTimeout(SlashCommandEvent event) {
+        authFlows.remove(event.getUser().getId());
+        event.getHook().editOriginalEmbeds(
+                InfoEmbed.fromString(":timer: Timed out. Please try again.").build()
+        ).queue();
     }
 
     public static void authFlowComplete(SlashCommandEvent event, boolean authorized, String email){
