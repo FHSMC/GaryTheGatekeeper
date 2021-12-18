@@ -19,7 +19,6 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class GaryBot extends ListenerAdapter {
 
@@ -27,7 +26,7 @@ public class GaryBot extends ListenerAdapter {
 
     private static final HashMap<String, AuthFlow> authFlows = new HashMap<>();
 
-    private static final Pattern usernameRegex = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
+    private static final String usernameRegex = "^[a-zA-Z0-9_]{2,16}$";
 
     public static void run() throws LoginException, InterruptedException {
         JDABuilder botBuilder = JDABuilder.createLight(
@@ -99,7 +98,7 @@ public class GaryBot extends ListenerAdapter {
 
                     case "set":
 
-                        if (usernameRegex.matcher(event.getOption("username").getAsString()).find()) {
+                        if (event.getOption("username").getAsString().matches("usernameRegex")) {
                             Storage.setIGNFromDiscord(
                                     event.getUser().getId(),
                                     Objects.requireNonNull(event.getOption("username")).getAsString(),
@@ -111,7 +110,7 @@ public class GaryBot extends ListenerAdapter {
                                         + Objects.requireNonNull(event.getOption("username")).getAsString())
                                 .build();
                         } else {
-                            response = InfoEmbed.fromString(":warning: Not a valid username.").build();
+                            response = InfoEmbed.fromString(":warning: Invalid username.").build();
                         }
                         break;
 
