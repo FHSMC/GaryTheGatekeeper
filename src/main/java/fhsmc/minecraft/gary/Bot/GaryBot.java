@@ -99,11 +99,18 @@ public class GaryBot extends ListenerAdapter {
                     case "set":
 
                         if (event.getOption("username").getAsString().matches(usernameRegex)) {
+
                             Storage.setIGNFromDiscord(
                                     event.getUser().getId(),
                                     Objects.requireNonNull(event.getOption("username")).getAsString(),
                                     Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
                             );
+
+                            Storage.removeUUIDFromDiscord(
+                                    event.getUser().getId(),
+                                    Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
+                            );
+
                             response = InfoEmbed.fromString(":white_check_mark: "
                                         + Objects.requireNonNull(event.getOption("platform")).getAsString()
                                         + " username set to "
