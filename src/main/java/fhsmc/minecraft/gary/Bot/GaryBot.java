@@ -44,12 +44,12 @@ public class GaryBot extends ListenerAdapter {
                                 .addChoice("Java", "java")
                                 .addChoice("Bedrock", "bedrock"),
                         new OptionData(OptionType.STRING, "username", "The username of the account", true)
-                ),
+                )/*,
                 new SubcommandData("remove", "Remove your Java or Bedrock account from the whitelist").addOptions(
                         new OptionData(OptionType.STRING, "platform", "Which platform would you like to remove the account from?", true)
                                 .addChoice("Java", "java")
                                 .addChoice("Bedrock", "bedrock")
-                )
+                )*/
         );
 
         Guild guild = client.getGuildById(String.valueOf(Config.get("discord.guild")));
@@ -73,7 +73,8 @@ public class GaryBot extends ListenerAdapter {
                                             + " those with a real school email. If you wish to use an alt, or are outside of the school"
                                             + ", then contact staff.")
                                     .addField("Commands", "/whitelist add - Add one of your accounts to the whitelist\n"
-                                            + "/whitelist remove - Remove one of your accounts from the whitelist", true)
+                                            // "/whitelist remove - Remove one of your accounts from the whitelist"
+                                            , true)
                                     .build()
                     ).queue();
                     return;
