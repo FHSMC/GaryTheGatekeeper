@@ -98,7 +98,7 @@ public class GaryBot extends ListenerAdapter {
 
                     case "set":
 
-                        if (event.getOption("username").getAsString().matches("usernameRegex")) {
+                        if (event.getOption("username").getAsString().matches(usernameRegex)) {
                             Storage.setIGNFromDiscord(
                                     event.getUser().getId(),
                                     Objects.requireNonNull(event.getOption("username")).getAsString(),
