@@ -124,7 +124,7 @@ public class GaryBot extends ListenerAdapter {
                     case "remove":
                         // Will just go to the default, don't put anything after this except for that until it's implemented
                     default:
-                        response = InfoEmbed.fromString("Unkown command? What? How did you manage that?").build();
+                        response = InfoEmbed.fromString("Unknown command? What? How did you manage that?").build();
                         break;
                 }
 
