@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -18,12 +19,15 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class GaryBot extends ListenerAdapter {
 
     private static JDA client;
 
     private static final HashMap<String, AuthFlow> authFlows = new HashMap<>();
+
+    private static final Pattern usernameRegex = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
     public static void run() throws LoginException, InterruptedException {
         JDABuilder botBuilder = JDABuilder.createLight(
@@ -89,23 +93,36 @@ public class GaryBot extends ListenerAdapter {
                     return;
                 }
 
+                MessageEmbed response;
+
                 switch (event.getSubcommandName()) {
+
                     case "set":
-                        Storage.setIGNFromDiscord(
-                                event.getUser().getId(),
-                                Objects.requireNonNull(event.getOption("username")).getAsString(),
-                                Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
-                        );
-                        event.getHook().editOriginalEmbeds(
-                                InfoEmbed.fromString(":white_check_mark: "
-                                                        + Objects.requireNonNull(event.getOption("platform")).getAsString()
-                                                        + " username set to "
-                                                        + Objects.requireNonNull(event.getOption("username")).getAsString())
-                                        .build()
-                        ).queue();
+
+                        if (usernameRegex.matcher(event.getOption("username").getAsString()).find()) {
+                            Storage.setIGNFromDiscord(
+                                    event.getUser().getId(),
+                                    Objects.requireNonNull(event.getOption("username")).getAsString(),
+                                    Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
+                            );
+                            response = InfoEmbed.fromString(":white_check_mark: "
+                                        + Objects.requireNonNull(event.getOption("platform")).getAsString()
+                                        + " username set to "
+                                        + Objects.requireNonNull(event.getOption("username")).getAsString())
+                                .build();
+                        } else {
+                            response = InfoEmbed.fromString(":warning: Not a valid username.").build();
+                        }
+                        break;
+
                     case "remove":
+                        // Will just go to the default, don't put anything after this except for that until it's implemented
+                    default:
+                        response = InfoEmbed.fromString("Unkown command? What? How did you manage that?").build();
                         break;
                 }
+
+                event.getHook().editOriginalEmbeds(response).queue();
             }
 
         } catch(SQLException e){
