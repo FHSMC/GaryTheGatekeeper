@@ -1,7 +1,5 @@
 package fhsmc.minecraft.gary;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import java.sql.*;
 
 public class Storage {
@@ -11,7 +9,9 @@ public class Storage {
 
     private static void update(String sql) throws SQLException{
         if (conn != null && statement != null) {
-                statement.executeUpdate(sql);
+            statement.executeUpdate(sql);
+        } else {
+            throw new NullPointerException("connection and statement cannot be null");
         }
     }
 
@@ -61,6 +61,11 @@ public class Storage {
     public static void setIGNFromUUID(String uuid, String ign, boolean bedrock) throws SQLException {
         String platform = bedrock ? "bedrock" : "java";
         update("UPDATE players SET " + platform + "_ign=\"" + ign + "\" WHERE " + platform + "_uuid=\"" + uuid + "\"");
+    }
+
+    public static void removeUUIDFromDiscord(String discord_id, boolean bedrock) throws SQLException{
+        String platform = bedrock ? "bedrock" : "java";
+        update("UPDATE players SET " + platform + "_uuid = NULL WHERE discord_id=" + discord_id);
     }
 
     public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
