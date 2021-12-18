@@ -1,7 +1,7 @@
 # GaryTheGatekeeper
 
 ##### TODO
-- [ ] Username regex
+- [X] ~~Username regex~~
 - [ ] More database methods
 - [ ] Remove username method
 - [ ] In-game commands
@@ -9,4 +9,5 @@
   - [ ] by ID add
   - [ ] remove by username
   - [ ] allow discord id
-- [ ] Clear UUID when username changed with command
+- [X] ~~Clear UUID when username changed with command~~
+- [ ] Whitelist kick message
