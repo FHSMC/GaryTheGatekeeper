@@ -62,6 +62,11 @@ public class Storage {
         update("UPDATE whitelist SET ign=\"" + ign + "\" WHERE uuid=\"" + uuid + "\" AND platform=" + platform);
     }
 
+    public static void addAnonymousIGN(String ign, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        update("INSERT INTO whitelist (ign, platform) VALUES (\"" + ign + "\", " + platform + ")");
+    }
+
     public static void removeUUIDFromDiscord(String discord_id, boolean bedrock) throws SQLException{
         String platform = bedrock ? "1" : "0";
         update("UPDATE whitelist SET uuid = NULL WHERE discord_id=" + discord_id + " AND platform=" + platform);
