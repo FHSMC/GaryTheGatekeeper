@@ -31,7 +31,7 @@ public class Storage {
             statement.setQueryTimeout(30);
 
             update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL)");
-            update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL, FOREIGN KEY(discord_id) REFERENCES authenticated_users(id))");
+            update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
@@ -46,7 +46,7 @@ public class Storage {
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
         String platform = bedrock ? "1" : "0";
         if (discordUserHasPlatform(discord_id, platform)) {
-            update("UPDATE whitelist SET ign=\"" + ign + "\", discord_id=" + discord_id + ", platform=" + platform);
+            update("UPDATE whitelist SET ign=\"" + ign + "\" WHERE discord_id=" + discord_id + ", platform=" + platform);
         } else {
             update("INSERT INTO whitelist (ign, discord_id, platform) VALUES (\"" + ign + "\", " + discord_id + ", " + platform + ")");
         }
