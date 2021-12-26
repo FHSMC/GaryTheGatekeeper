@@ -30,7 +30,8 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            update("CREATE TABLE IF NOT EXISTS players (id INTEGER PRIMARY KEY AUTOINCREMENT, discord_id INTEGER, java_ign TEXT, java_uuid TEXT, bedrock_ign TEXT, bedrock_uuid TEXT)");
+            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL)");
+            update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL, FOREIGN KEY(discord_id) REFERENCES authenticated_users(id))");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
@@ -39,51 +40,47 @@ public class Storage {
     }
 
     public static void addDiscordId(String discord_id) throws SQLException {
-        if (!discordUserInWhitelist(discord_id)) {
-            update("INSERT INTO players (discord_id) VALUES (" + discord_id + ")");
-        }
+        update("INSERT INTO authenticated_users (id) VALUES (" + discord_id + ")");
     }
 
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
-        String platform = bedrock ? "bedrock" : "java";
-        if (discordUserInWhitelist(discord_id)){
-            update("UPDATE players SET " + platform + "_ign=\"" + ign + "\" WHERE discord_id=" + discord_id);
+        String platform = bedrock ? "1" : "0";
+        if (discordUserHasPlatform(discord_id, platform)) {
+            update("UPDATE whitelist SET ign=\"" + ign + "\", discord_id=" + discord_id + ", platform=" + platform);
         } else {
-            update("INSERT INTO players (discord_id," + platform + "_ign) VALUES (" + discord_id + ",\"" + ign + "\")");
+            update("INSERT INTO whitelist (ign, discord_id, platform) VALUES (\"" + ign + "\", " + discord_id + ", " + platform + ")");
         }
     }
 
     public static void setUUIDFromIGN(String ign, String uuid, boolean bedrock) throws SQLException {
-        String platform = bedrock ? "bedrock" : "java";
-        update("UPDATE players SET " + platform + "_uuid=\"" + uuid + "\" WHERE " + platform + "_ign=\"" + ign + "\"");
+        String platform = bedrock ? "1" : "0";
+        update("UPDATE whitelist SET uuid=\"" + uuid + "\" WHERE ign=\"" + ign + "\" AND platform=" + platform);
     }
 
     public static void setIGNFromUUID(String uuid, String ign, boolean bedrock) throws SQLException {
-        String platform = bedrock ? "bedrock" : "java";
-        update("UPDATE players SET " + platform + "_ign=\"" + ign + "\" WHERE " + platform + "_uuid=\"" + uuid + "\"");
+        String platform = bedrock ? "1" : "0";
+        update("UPDATE whitelist SET ign=\"" + ign + "\" WHERE uuid=\"" + uuid + "\" AND platform=" + platform);
     }
 
     public static void removeUUIDFromDiscord(String discord_id, boolean bedrock) throws SQLException{
-        String platform = bedrock ? "bedrock" : "java";
-        update("UPDATE players SET " + platform + "_uuid = NULL WHERE discord_id=" + discord_id);
+        String platform = bedrock ? "1" : "0";
+        update("UPDATE whitelist SET uuid = NULL WHERE discord_id=" + discord_id + " AND platform=" + platform);
     }
 
     public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
-            return booleanQuery("SELECT * FROM players WHERE discord_id=" + discord_id);
+        return booleanQuery("SELECT * FROM authenticated_users WHERE id=" + discord_id);
     }
 
     public static boolean isPlayerUUIDWhitelisted(String uuid) throws SQLException {
-        return (
-            booleanQuery("SELECT * FROM players WHERE java_uuid=\"" + uuid + "\"")
-            || booleanQuery("SELECT * FROM players WHERE bedrock_uuid=\"" + uuid + "\"")
-        );
+        return booleanQuery("SELECT * FROM whitelist WHERE uuid=\"" + uuid + "\"");
     }
 
     public static boolean isPlayerIGNWhitelisted(String ign) throws SQLException {
-        return (
-            booleanQuery("SELECT * FROM players WHERE java_ign=\"" + ign + "\"")
-            || booleanQuery("SELECT * FROM players WHERE bedrock_ign=\"" + ign + "\"")
-        );
+        return booleanQuery("SELECT * FROM whitelist WHERE ign=\"" + ign + "\"");
+    }
+
+    public static boolean discordUserHasPlatform(String discord_id, String platform) throws SQLException {
+        return booleanQuery("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + platform);
     }
 
 }
