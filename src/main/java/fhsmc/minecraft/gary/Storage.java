@@ -31,7 +31,7 @@ public class Storage {
             statement.setQueryTimeout(30);
 
             update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL)");
-            update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL");
+            update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL)");
 
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Gary encountered a problem while trying to connect to a database: " + e.getMessage());
