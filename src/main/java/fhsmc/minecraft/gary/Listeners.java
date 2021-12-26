@@ -15,8 +15,8 @@ public class Listeners implements Listener {
         ProxiedPlayer player = event.getPlayer();
 
         try {
-            if (!Storage.isPlayerUUIDWhitelisted(player.getUniqueId().toString())) {
-                if (!Storage.isPlayerIGNWhitelisted(player.getName())) {
+            if (!Storage.isPlayerUUIDWhitelisted(player.getUniqueId().toString(), player.getName().startsWith("."))) {
+                if (!Storage.isPlayerIGNWhitelisted(player.getName(), player.getName().startsWith("."))) {
                     player.disconnect(new TextComponent("You are not whitelisted!"));
                 } else {
                     Storage.setUUIDFromIGN(
@@ -26,7 +26,7 @@ public class Listeners implements Listener {
                     );
                 }
             } else {
-                if (!Storage.isPlayerIGNWhitelisted(player.getName())) {
+                if (!Storage.isPlayerIGNWhitelisted(player.getName(), player.getName().startsWith("."))) {
                     Storage.setIGNFromUUID(
                             player.getUniqueId().toString(),
                             player.getName(),

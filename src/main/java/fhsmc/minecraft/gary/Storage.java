@@ -71,12 +71,14 @@ public class Storage {
         return booleanQuery("SELECT * FROM authenticated_users WHERE id=" + discord_id);
     }
 
-    public static boolean isPlayerUUIDWhitelisted(String uuid) throws SQLException {
-        return booleanQuery("SELECT * FROM whitelist WHERE uuid=\"" + uuid + "\"");
+    public static boolean isPlayerUUIDWhitelisted(String uuid, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        return booleanQuery("SELECT * FROM whitelist WHERE uuid=\"" + uuid + "\" AND platform=" + platform + "");
     }
 
-    public static boolean isPlayerIGNWhitelisted(String ign) throws SQLException {
-        return booleanQuery("SELECT * FROM whitelist WHERE ign=\"" + ign + "\"");
+    public static boolean isPlayerIGNWhitelisted(String ign, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        return booleanQuery("SELECT * FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + platform + "");
     }
 
     public static boolean discordUserHasPlatform(String discord_id, String platform) throws SQLException {
