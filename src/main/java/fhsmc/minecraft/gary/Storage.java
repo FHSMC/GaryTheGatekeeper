@@ -46,7 +46,7 @@ public class Storage {
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
         String platform = bedrock ? "1" : "0";
         if (discordUserHasPlatform(discord_id, platform)) {
-            update("UPDATE whitelist SET ign=\"" + ign + "\" WHERE discord_id=" + discord_id + ", platform=" + platform);
+            update("UPDATE whitelist SET ign=\"" + ign + "\" WHERE discord_id=" + discord_id + " AND platform=" + platform);
         } else {
             update("INSERT INTO whitelist (ign, discord_id, platform) VALUES (\"" + ign + "\", " + discord_id + ", " + platform + ")");
         }
