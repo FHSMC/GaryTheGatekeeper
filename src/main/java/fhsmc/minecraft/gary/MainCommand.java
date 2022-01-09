@@ -31,10 +31,11 @@ public class MainCommand extends Command implements TabExecutor {
                         break;
                     case "allow":
                         Storage.addDiscordId(args[1]);
-                        sender.sendMessage(new TextComponent("Allowed Discord ID " + args[2] + " to use bot commands."));
+                        sender.sendMessage(new TextComponent("Allowed Discord ID " + args[1] + " to use bot commands."));
                         break;
                     case "revoke":
-                        sender.sendMessage(new TextComponent("Revoked Discord ID " + args[2] + "'s ability to use bot commands."));
+                        sender.sendMessage(new TextComponent("Revoked Discord ID " + args[1] + "'s ability to use bot commands."));
+                        break;
                     default:
                         break;
                 }
