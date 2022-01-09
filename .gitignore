@@ -1,5 +1,6 @@
 # User-specific stuff
 .idea/
+.vscode/
 
 *.iml
 *.ipr
@@ -9,6 +10,9 @@
 out/
 # mpeltonen/sbt-idea plugin
 .idea_modules/
+
+# VSCode
+bin/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
