@@ -5,3 +5,6 @@ google:
   client-id: abc
   client-secret: abc
   email-suffix: @example.com
+messages:
+  not-whitelisted: You are not whitelisted on this server!
+  whitelist-check-error: There was an error while checking the whitelist.

@@ -17,7 +17,7 @@ public class Listeners implements Listener {
         try {
             if (!Storage.isPlayerUUIDWhitelisted(player.getUniqueId().toString(), player.getName().startsWith("."))) {
                 if (!Storage.isPlayerIGNWhitelisted(player.getName(), player.getName().startsWith("."))) {
-                    player.disconnect(new TextComponent("You are not whitelisted!"));
+                    player.disconnect(new TextComponent(Config.getString("messages.not-whitelisted")));
                 } else {
                     Storage.setUUIDFromIGN(
                             player.getName(),
@@ -35,7 +35,7 @@ public class Listeners implements Listener {
                 }
             }
         } catch (SQLException e) {
-            player.disconnect(new TextComponent("There was an error while checking the whitelist. Please contact staff."));
+            player.disconnect(new TextComponent(Config.getString("messages.whitelist-check-error")));
             e.printStackTrace();
         }
 
