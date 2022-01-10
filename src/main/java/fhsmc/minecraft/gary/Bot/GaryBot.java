@@ -75,7 +75,7 @@ public class GaryBot extends ListenerAdapter {
                                             + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
                                             + " those with a real school email. If you wish to use an alt, or are outside of the school"
                                             + ", then contact staff.")
-                                    .addField("Commands", "/whitelist add - Add one of your accounts to the whitelist\n"
+                                    .addField("Commands", "/whitelist set - Set one of your account's usernames on the whitelist\n"
                                             // "/whitelist remove - Remove one of your accounts from the whitelist"
                                             , true)
                                     .build()
