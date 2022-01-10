@@ -10,16 +10,6 @@ public class GoogleOAuth {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final OkHttpClient httpClient = new OkHttpClient();
 
-    private static String get(String url) throws IOException{
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        try (Response response = httpClient.newCall(request).execute()) {
-            return response.body().string();
-        }
-    }
-
     private static String post(String url, String jsonBody) throws IOException{
         RequestBody body = RequestBody.create(JSON, jsonBody);
         Request request = new Request.Builder()
