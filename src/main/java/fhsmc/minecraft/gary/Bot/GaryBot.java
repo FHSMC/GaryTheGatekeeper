@@ -67,6 +67,8 @@ public class GaryBot extends ListenerAdapter {
         try {
             if (event.getName().equals("whitelist")) {
 
+                // Info command
+
                 if (event.getSubcommandName().equals("info")) {
                     event.getHook().editOriginalEmbeds(
                             InfoEmbed.fromString("Gary is the server gate system. We are allowing "
@@ -82,16 +84,20 @@ public class GaryBot extends ListenerAdapter {
                     ).queue();
                     return;
                 }
-
+                
+                // Checking if user is in the whitelist for the remaining commands
                 if (!Storage.discordUserInWhitelist(event.getUser().getId())) {
                     if (authFlows.containsKey(event.getUser().getId())) {
+                        // Show an embed displaying user's current auth flow
                         authFlows.get(event.getUser().getId()).sendFirstEmbed(event);
                     } else {
+                        // Start the auth flow
                         authFlows.put(event.getUser().getId(), new AuthFlow(event));
                     }
                     return;
                 }
-
+                
+                // Rest of the commands
                 MessageEmbed response;
 
                 switch (event.getSubcommandName()) {
