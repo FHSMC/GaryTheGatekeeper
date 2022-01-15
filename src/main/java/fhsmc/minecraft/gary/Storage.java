@@ -30,7 +30,7 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL)");
+            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL, cooldown_epoch INTEGER, disabled BOOLEAN)");
             update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL)");
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -41,6 +41,31 @@ public class Storage {
 
     public static void addDiscordId(String discord_id) throws SQLException {
         update("INSERT INTO authenticated_users (id) VALUES (" + discord_id + ")");
+    }
+
+    public static void setDiscordCooldownEpoch(String discord_id, long cooldownEpoch) throws SQLException {
+        update("UPDATE authenticated_users SET cooldown_epoch = " + cooldownEpoch + " WHERE id = " + discord_id);
+    }
+
+    public static void disableDiscordId(String discord_id) throws SQLException {
+        update("UPDATE authenticated_users SET disabled = 1 WHERE id = " + discord_id);
+    }
+
+    public static void enableDiscordId(String discord_id) throws SQLException {
+        update("UPDATE authenticated_users SET disabled = 0 WHERE id = " + discord_id);
+    }
+
+    public static boolean isDiscordIdDisabled(String discord_id) throws SQLException {
+        return booleanQuery("SELECT disabled FROM authenticated_users WHERE id = " + discord_id);
+    }
+
+    public static boolean isDiscordCooldownEnded(String discord_id) throws SQLException {
+        if (conn != null && statement != null) {
+            ResultSet rs = statement.executeQuery("SELECT cooldown_epoch FROM authenticated_users WHERE id = " + discord_id);
+            return rs.getLong("cooldown_epoch") < System.currentTimeMillis();
+        } else {
+            throw new NullPointerException("connection and statement cannot be null");
+        }
     }
 
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
