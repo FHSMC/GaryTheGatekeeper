@@ -12,3 +12,6 @@
   - [ ] remove discord id
 - [X] ~~Clear UUID when username changed with command~~
 - [ ] Whitelist kick message
+- [ ] Cooldowns
+
+- [ ] Expand to handle bans and stuff
