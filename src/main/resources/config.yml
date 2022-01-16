@@ -1,6 +1,7 @@
 discord:
   token: T0K3N
   guild: 000000000000000000
+  cooldown: 1000
 google:
   client-id: abc
   client-secret: abc

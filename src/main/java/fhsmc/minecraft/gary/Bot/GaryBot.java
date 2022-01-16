@@ -104,24 +104,55 @@ public class GaryBot extends ListenerAdapter {
 
                     case "set":
 
+                        String platform = Objects.requireNonNull(event.getOption("platform")).getAsString();
+                        boolean isBedrock = platform.equals("bedrock");
+
+                        // Check if user is on cooldown
+                        if (isBedrock && Storage.isBedrockOnCooldown(event.getUser().getId())) {
+                            int cooldownSeconds = (int) (Storage.getBedrockCooldown(event.getUser().getId()) / 1000);
+                            response = InfoEmbed.fromString(":timer: You are on cooldown for changing your Bedrock username! Your cooldown will end <t:" + cooldownSeconds + ":R>")
+                                    .build();
+                            break;
+                        } else if (!isBedrock && Storage.isJavaOnCooldown(event.getUser().getId())) {
+                            int cooldownSeconds = (int) (Storage.getJavaCooldown(event.getUser().getId()) / 1000);
+                            response = InfoEmbed.fromString(":timer: You are on cooldown for changing your Java username! Your cooldown will end <t:" + cooldownSeconds + ":R>")
+                                    .build();
+                            break;
+                        }
+                        
+                        if (Storage.isDiscordIdDisabled(event.getUser().getId())) {
+                            response = InfoEmbed.fromString(":x: Your account is disallowed from using Gary.")
+                                    .build();
+                            break;
+                        }
+
                         if (event.getOption("username").getAsString().matches(usernameRegex)) {
 
                             Storage.setIGNFromDiscord(
                                     event.getUser().getId(),
                                     Objects.requireNonNull(event.getOption("username")).getAsString(),
-                                    Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
+                                    isBedrock
                             );
 
                             Storage.removeUUIDFromDiscord(
                                     event.getUser().getId(),
-                                    Objects.requireNonNull(event.getOption("platform")).getAsString().equals("bedrock")
+                                    isBedrock
                             );
 
                             response = InfoEmbed.fromString(":white_check_mark: "
-                                        + Objects.requireNonNull(event.getOption("platform")).getAsString()
+                                        + platform
                                         + " username set to "
                                         + Objects.requireNonNull(event.getOption("username")).getAsString())
                                 .build();
+
+                            // set cooldown
+                            long cooldown = System.currentTimeMillis() + Config.getInt("discord.cooldown");
+                            if (isBedrock){
+                                Storage.setBedrockCooldown(event.getUser().getId(), cooldown);
+                            } else {
+                                Storage.setJavaCooldown(event.getUser().getId(), cooldown);
+                            }
+
                         } else {
                             response = InfoEmbed.fromString(":warning: Invalid username.").build();
                         }
