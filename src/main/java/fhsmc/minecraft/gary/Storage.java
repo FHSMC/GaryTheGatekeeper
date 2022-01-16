@@ -30,7 +30,7 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL, cooldown_epoch INTEGER, disabled BOOLEAN)");
+            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL, java_cooldown INTEGER, bedrock_cooldown INTEGER, disabled BOOLEAN)");
             update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL)");
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -43,8 +43,12 @@ public class Storage {
         update("INSERT INTO authenticated_users (id) VALUES (" + discord_id + ")");
     }
 
-    public static void setDiscordCooldownEpoch(String discord_id, long cooldownEpoch) throws SQLException {
-        update("UPDATE authenticated_users SET cooldown_epoch = " + cooldownEpoch + " WHERE id = " + discord_id);
+    public static void setJavaCooldown(String discord_id, long cooldownEpoch) throws SQLException {
+        update("UPDATE authenticated_users SET java_cooldown= " + cooldownEpoch + " WHERE id = " + discord_id);
+    }
+
+    public static void setBedrockCooldown(String discord_id, long cooldownEpoch) throws SQLException {
+        update("UPDATE authenticated_users SET bedrock_cooldown = " + cooldownEpoch + " WHERE id = " + discord_id);
     }
 
     public static void disableDiscordId(String discord_id) throws SQLException {
@@ -56,16 +60,40 @@ public class Storage {
     }
 
     public static boolean isDiscordIdDisabled(String discord_id) throws SQLException {
-        return booleanQuery("SELECT disabled FROM authenticated_users WHERE id = " + discord_id);
-    }
-
-    public static boolean isDiscordCooldownEnded(String discord_id) throws SQLException {
         if (conn != null && statement != null) {
-            ResultSet rs = statement.executeQuery("SELECT cooldown_epoch FROM authenticated_users WHERE id = " + discord_id);
-            return rs.getLong("cooldown_epoch") < System.currentTimeMillis();
+            ResultSet rs = statement.executeQuery("SELECT disabled FROM authenticated_users WHERE id = " + discord_id);
+            return rs.getBoolean("disabled");
         } else {
             throw new NullPointerException("connection and statement cannot be null");
         }
+    }
+
+    public static long getJavaCooldown(String discord_id) throws SQLException {
+        if (conn != null && statement != null) {
+            ResultSet rs = statement.executeQuery("SELECT java_cooldown FROM authenticated_users WHERE id = " + discord_id);
+            return rs.getLong("java_cooldown");
+        } else {
+            throw new NullPointerException("connection and statement cannot be null");
+        }
+    }
+
+    public static boolean isJavaOnCooldown(String discord_id) throws SQLException {
+        long cooldown = getJavaCooldown(discord_id);
+        return cooldown != 0 && cooldown > System.currentTimeMillis();
+    }
+
+    public static long getBedrockCooldown(String discord_id) throws SQLException {
+        if (conn != null && statement != null) {
+            ResultSet rs = statement.executeQuery("SELECT bedrock_cooldown FROM authenticated_users WHERE id = " + discord_id);
+            return rs.getLong("bedrock_cooldown");
+        } else {
+            throw new NullPointerException("connection and statement cannot be null");
+        }
+    }
+
+    public static boolean isBedrockOnCooldown(String discord_id) throws SQLException {
+        long cooldown = getBedrockCooldown(discord_id);
+        return cooldown != 0 && cooldown > System.currentTimeMillis();
     }
 
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
