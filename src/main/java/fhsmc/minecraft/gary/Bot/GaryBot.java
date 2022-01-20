@@ -47,12 +47,12 @@ public class GaryBot extends ListenerAdapter {
                                 .addChoice("Java", "java")
                                 .addChoice("Bedrock", "bedrock"),
                         new OptionData(OptionType.STRING, "username", "The username of the account", true)
-                )/*,
+                ),
                 new SubcommandData("remove", "Remove your Java or Bedrock account from the whitelist").addOptions(
                         new OptionData(OptionType.STRING, "platform", "Which platform would you like to remove the account from?", true)
                                 .addChoice("Java", "java")
                                 .addChoice("Bedrock", "bedrock")
-                )*/
+                )
         );
 
         Guild guild = client.getGuildById(String.valueOf(Config.get("discord.guild")));
@@ -78,7 +78,7 @@ public class GaryBot extends ListenerAdapter {
                                             + " those with a real school email. If you wish to use an alt, or are outside of the school"
                                             + ", then contact staff.")
                                     .addField("Commands", "/whitelist set - Set one of your account's usernames on the whitelist\n"
-                                            // "/whitelist remove - Remove one of your accounts from the whitelist"
+                                            + "/whitelist remove - Remove one of your accounts from the whitelist"
                                             , true)
                                     .build()
                     ).queue();
@@ -100,12 +100,12 @@ public class GaryBot extends ListenerAdapter {
                 // Rest of the commands
                 MessageEmbed response;
 
+                String platform = Objects.requireNonNull(event.getOption("platform")).getAsString();
+                boolean isBedrock = platform.equals("bedrock");
+
                 switch (event.getSubcommandName()) {
 
                     case "set":
-
-                        String platform = Objects.requireNonNull(event.getOption("platform")).getAsString();
-                        boolean isBedrock = platform.equals("bedrock");
 
                         // Check if user is on cooldown
                         if (isBedrock && Storage.isBedrockOnCooldown(event.getUser().getId())) {
@@ -159,7 +159,12 @@ public class GaryBot extends ListenerAdapter {
                         break;
 
                     case "remove":
-                        // Will just go to the default, don't put anything after this except for that until it's implemented
+                        
+                        Storage.removeEntryFromDiscord(event.getUser().getId(), isBedrock);
+
+                        response = InfoEmbed.fromString(":white_check_mark: Removed your " + platform + " account from the whitelist.").build();
+                        break;
+
                     default:
                         response = InfoEmbed.fromString("**Unknown command**\n How did you even manage this?").build();
                         break;
