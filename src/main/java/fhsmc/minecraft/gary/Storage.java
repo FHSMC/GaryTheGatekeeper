@@ -46,7 +46,7 @@ public class Storage {
         update("INSERT INTO authenticated_users (id) VALUES (" + discord_id + ")");
     }
 
-    public static void removeDiscordID(String discord_id) throws SQLException {
+    public static void removeDiscordId(String discord_id) throws SQLException {
         update("DELETE FROM authenticated_users WHERE id = " + discord_id);
     }
 
