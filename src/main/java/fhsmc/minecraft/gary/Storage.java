@@ -38,9 +38,16 @@ public class Storage {
             throw e;
         }
     }
+    
+    // Authenticated Users methods
+    // Discord ID storage and cooldowns and stuff
 
     public static void addDiscordId(String discord_id) throws SQLException {
         update("INSERT INTO authenticated_users (id) VALUES (" + discord_id + ")");
+    }
+
+    public static void removeDiscordID(String discord_id) throws SQLException {
+        update("DELETE FROM authenticated_users WHERE id = " + discord_id);
     }
 
     public static void setJavaCooldown(String discord_id, long cooldownEpoch) throws SQLException {
@@ -96,6 +103,9 @@ public class Storage {
         return cooldown != 0 && cooldown > System.currentTimeMillis();
     }
 
+
+    // Whitelist/Minecraft methods
+
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
         String platform = bedrock ? "1" : "0";
         if (discordUserHasPlatform(discord_id, platform)) {
@@ -141,6 +151,21 @@ public class Storage {
 
     public static boolean discordUserHasPlatform(String discord_id, String platform) throws SQLException {
         return booleanQuery("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + platform);
+    }
+
+    public static void removeEntryFromDiscord(String discord_id, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        update("DELETE FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + platform);
+    }
+
+    public static void removeEntryFromIGN(String ign, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        update("DELETE FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + platform);
+    }
+
+    public static void removeEntryFromUUID(String uuid, boolean bedrock) throws SQLException {
+        String platform = bedrock ? "1" : "0";
+        update("DELETE FROM whitelist WHERE uuid=\"" + uuid + "\" AND platform=" + platform);
     }
 
 }
