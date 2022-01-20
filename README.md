@@ -3,7 +3,7 @@
 ##### TODO
 - [X] ~~Username regex~~
 - [ ] *More database methods*
-- [ ] Remove username method
+- [X] Remove username method
 - [ ] *In-game commands*
   - [X] ~~anonymous add~~
   - [X] ~~by ID add~~
