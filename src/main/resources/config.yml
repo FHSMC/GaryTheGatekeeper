@@ -1,11 +1,20 @@
 discord:
+
   token: T0K3N
   guild: 000000000000000000
+
+  # Command cooldown (ms)
   cooldown: 1000
+
 google:
   client-id: abc
   client-secret: abc
   email-suffix: @example.com
+
 messages:
+
+  # Shown when a user is disconnected for not being whitelisted
   not-whitelisted: You are not whitelisted on this server!
+
+  # Shown during an error in checking the database
   whitelist-check-error: There was an error while checking the whitelist.
