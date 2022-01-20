@@ -31,7 +31,6 @@ public class AuthFlow {
             int interval = data.getInt("interval");
 
             exec = new Timer();
-            GoogleOAuth.pollGoogleAuth(deviceCode);
             exec.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
