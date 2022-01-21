@@ -128,6 +128,12 @@ public class GaryBot extends ListenerAdapter {
 
                         if (event.getOption("username").getAsString().matches(usernameRegex)) {
 
+                            if (Storage.isPlayerIGNWhitelisted(event.getOption("username").getAsString(), isBedrock)) {
+                                response = InfoEmbed.fromString(":x: This username is already whitelisted!")
+                                        .build();
+                                break;
+                            }
+
                             Storage.setIGNFromDiscord(
                                     event.getUser().getId(),
                                     Objects.requireNonNull(event.getOption("username")).getAsString(),
