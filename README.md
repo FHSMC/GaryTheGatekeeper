@@ -6,7 +6,7 @@ Gary is also meant to work on a server running Gyser, with both Java and Bedrock
 
 ### Usage
 
-To run Gary, the JAR artifact can be placed in the Bungeecord `plugins` folder. Once run once, Gary will generate a (config.yml)[/src/main/resources/config.yml] where you can place your API tokens, and other configuration.
+To run Gary, the JAR artifact can be placed in the Bungeecord `plugins` folder. Once run once, Gary will generate a [config.yml](/src/main/resources/config.yml) where you can place your API tokens, and other configuration.
 
 In Discord, make sure to invite Gary to your Discord with the following URL
 ```
