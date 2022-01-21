@@ -30,7 +30,7 @@ public class Storage {
             statement = conn.createStatement();
             statement.setQueryTimeout(30);
 
-            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL, java_cooldown INTEGER, bedrock_cooldown INTEGER, disabled BOOLEAN)");
+            update("CREATE TABLE IF NOT EXISTS authenticated_users (id INTEGER PRIMARY KEY NOT NULL, email TEXT, java_cooldown INTEGER, bedrock_cooldown INTEGER, disabled BOOLEAN)");
             update("CREATE TABLE IF NOT EXISTS whitelist (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ign TEXT NOT NULL, uuid TEXT, discord_id INTEGER, platform INTEGER NOT NULL)");
 
         } catch (SQLException | ClassNotFoundException e) {
@@ -48,6 +48,14 @@ public class Storage {
 
     public static void removeDiscordId(String discord_id) throws SQLException {
         update("DELETE FROM authenticated_users WHERE id = " + discord_id);
+    }
+
+    public static void addDiscordId(String discord_id, String email) throws SQLException {
+        update("INSERT INTO authenticated_users (id, email) VALUES (" + discord_id + ", \"" + email + "\")");
+    }
+
+    public static void removeDiscordIdByEmail(String email) throws SQLException {
+        update("DELETE FROM authenticated_users WHERE email = \"" + email + "\"");
     }
 
     public static void setJavaCooldown(String discord_id, long cooldownEpoch) throws SQLException {
@@ -103,7 +111,14 @@ public class Storage {
         return cooldown != 0 && cooldown > System.currentTimeMillis();
     }
 
+    public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
+        return booleanQuery("SELECT * FROM authenticated_users WHERE id=" + discord_id);
+    }
 
+    public static boolean emailInWhitelist(String email) throws SQLException {
+        return booleanQuery("SELECT * FROM authenticated_users WHERE email=\"" + email + "\"");
+    }
+    
     // Whitelist/Minecraft methods
 
     public static void setIGNFromDiscord(String discord_id, String ign, boolean bedrock) throws SQLException {
@@ -133,10 +148,6 @@ public class Storage {
     public static void removeUUIDFromDiscord(String discord_id, boolean bedrock) throws SQLException{
         String platform = bedrock ? "1" : "0";
         update("UPDATE whitelist SET uuid = NULL WHERE discord_id=" + discord_id + " AND platform=" + platform);
-    }
-
-    public static boolean discordUserInWhitelist(String discord_id) throws SQLException {
-        return booleanQuery("SELECT * FROM authenticated_users WHERE id=" + discord_id);
     }
 
     public static boolean isPlayerUUIDWhitelisted(String uuid, boolean bedrock) throws SQLException {
