@@ -195,7 +195,7 @@ public class Storage {
     }
 
     public static String getDiscordFromIGN(String ign, boolean bedrock) throws SQLException {
-        ResultSet rs = query("SELECT  FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + bedrock);
+        ResultSet rs = query("SELECT * FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + bedrock);
         if (!rs.isBeforeFirst()) {
             return "None";
         } else {
