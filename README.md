@@ -12,7 +12,7 @@
   - [X] ~~allow discord id~~
   - [X] ~~remove discord id~~
   - [ ] show whitelist
-  - [ ] show individual user info
+  - [X] show individual user info
 - [X] ~~Clear UUID when username changed with command~~
 - [X] ~~Whitelist kick message~~
 - [X] ~~Cooldowns~~
