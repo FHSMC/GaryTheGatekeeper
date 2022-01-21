@@ -1,6 +1,29 @@
 # GaryTheGatekeeper
 
-##### TODO
+Gary is a gate system for Discord and Bungeecord. It was made specifically for controlling a server whitelist via Discord, but only if the user can log in with a valid school google email.
+
+Gary is also meant to work on a server running Gyser, with both Java and Bedrock accounts
+
+### Usage
+
+To run Gary, the JAR artifact can be placed in the Bungeecord `plugins` folder. Once run once, Gary will generate a (config.yml)[/src/main/resources/config.yml] where you can place your API tokens, and other configuration.
+
+In Discord, make sure to invite Gary to your Discord with the following URL
+```
+https://discord.com/api/oauth2/authorize?client_id=<your-client-id>&permissions=0&scope=bot%20applications.commands
+```
+This will invite Gary as a bot account, and give him permission to create slash commands
+
+#### Commands
+All of Gary's Discord commands are subcommands of the `/whitelist` command:
+- `info` - Show info about what Gary is, and if you are authorized, your whitelist data
+- `set <Java|Bedrock> <username>` - Set your Java or Bedrock username
+- `remove <Java|Bedrock>` - Remove your Java or Bedrock username from the whitelist
+
+### What does Gary store?
+The only thing that Gary stores from you logging into Google is your email. No other information or tokens are saved that would give him access to your account at a later time. This email is linked to the Discord ID that was used to first run the command in order to prevent multiple Discord accounts using the same email.
+
+### TODO List
 - [X] ~~Username regex~~
 - [X] ~~*More database methods*~~
   - [X] ~~Actually fetch values instead of just checking if they exist~~

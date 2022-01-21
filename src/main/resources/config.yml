@@ -7,8 +7,10 @@ discord:
   cooldown: 1000
 
 google:
+  # https://developers.google.com/identity/protocols/oauth2/limited-input-device
   client-id: abc
   client-secret: abc
+  
   email-suffix: @example.com
 
 messages:
