@@ -2,6 +2,7 @@ package fhsmc.minecraft.gary.Bot;
 
 import fhsmc.minecraft.gary.Config;
 import fhsmc.minecraft.gary.Storage;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -66,22 +67,36 @@ public class GaryBot extends ListenerAdapter {
         event.deferReply().setEphemeral(true).queue();
         try {
             if (event.getName().equals("whitelist")) {
+                
+                MessageEmbed response;
 
                 // Info command
 
                 if (event.getSubcommandName().equals("info")) {
-                    event.getHook().editOriginalEmbeds(
-                            InfoEmbed.fromString("Gary is the server gate system. We are allowing "
-                                            + "users to whitelist themselves using this, and are "
-                                            + "restricted to one of each platform, Java and Bedrock. "
-                                            + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
-                                            + " those with a real school email. If you wish to use an alt, or are outside of the school"
-                                            + ", then contact staff.")
-                                    .addField("Commands", "/whitelist set - Set one of your account's usernames on the whitelist\n"
-                                            + "/whitelist remove - Remove one of your accounts from the whitelist"
-                                            , true)
-                                    .build()
-                    ).queue();
+
+                    EmbedBuilder res;
+
+                    res = InfoEmbed.fromString("Gary is the server gate system. We are allowing "
+                                                + "users to whitelist themselves using this, and are "
+                                                + "restricted to one of each platform, Java and Bedrock. "
+                                                + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
+                                                + " those with a real school email. If you wish to use an alt, or are outside of the school"
+                                                + ", then contact staff."
+                                                + "\n\n**Commands**\n```ansi\n[0;37m/whitelist set[0m - Set one of your account's usernames on the whitelist\n"
+                                                + "[0;37m/whitelist remove[0m - Remove one of your accounts from the whitelist\n```"
+                                            );
+                    
+                    
+                    if (Storage.discordUserInWhitelist(event.getUser().getId())) {
+                        res.getDescriptionBuilder()
+                            .append("\n**Your info**\n"
+                                    + "```ansi\n[0;37mJava Username:[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), false)
+                                    + "\n[0;37mBedrock Username:[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), true)
+                                    + "\n[0;37mEmail:[0m " + Storage.getEmailFromId(event.getUser().getId())
+                                    + "\n```");
+                    }
+
+                    event.getHook().editOriginalEmbeds(res.build()).queue();
                     return;
                 }
                 
@@ -98,7 +113,6 @@ public class GaryBot extends ListenerAdapter {
                 }
                 
                 // Rest of the commands
-                MessageEmbed response;
 
                 String platform = Objects.requireNonNull(event.getOption("platform")).getAsString();
                 boolean isBedrock = platform.equals("bedrock");
