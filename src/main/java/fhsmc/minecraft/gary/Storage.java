@@ -23,6 +23,14 @@ public class Storage {
         return false;
     }
 
+    private static ResultSet query(String sql) throws SQLException{
+        if (conn != null && statement != null) {
+            ResultSet rs = statement.executeQuery(sql);
+            return rs;
+        }
+        return null;
+    }
+
     public static void open(String databaseFilePath) throws SQLException, ClassNotFoundException {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -75,21 +83,13 @@ public class Storage {
     }
 
     public static boolean isDiscordIdDisabled(String discord_id) throws SQLException {
-        if (conn != null && statement != null) {
-            ResultSet rs = statement.executeQuery("SELECT disabled FROM authenticated_users WHERE id = " + discord_id);
-            return rs.getBoolean("disabled");
-        } else {
-            throw new NullPointerException("connection and statement cannot be null");
-        }
+        ResultSet rs = query("SELECT disabled FROM authenticated_users WHERE id = " + discord_id);
+        return rs.getBoolean("disabled");
     }
 
     public static long getJavaCooldown(String discord_id) throws SQLException {
-        if (conn != null && statement != null) {
-            ResultSet rs = statement.executeQuery("SELECT java_cooldown FROM authenticated_users WHERE id = " + discord_id);
-            return rs.getLong("java_cooldown");
-        } else {
-            throw new NullPointerException("connection and statement cannot be null");
-        }
+        ResultSet rs = query("SELECT java_cooldown FROM authenticated_users WHERE id = " + discord_id);
+        return rs.getLong("java_cooldown");
     }
 
     public static boolean isJavaOnCooldown(String discord_id) throws SQLException {
@@ -98,12 +98,8 @@ public class Storage {
     }
 
     public static long getBedrockCooldown(String discord_id) throws SQLException {
-        if (conn != null && statement != null) {
-            ResultSet rs = statement.executeQuery("SELECT bedrock_cooldown FROM authenticated_users WHERE id = " + discord_id);
-            return rs.getLong("bedrock_cooldown");
-        } else {
-            throw new NullPointerException("connection and statement cannot be null");
-        }
+        ResultSet rs = query("SELECT bedrock_cooldown FROM authenticated_users WHERE id = " + discord_id);
+        return rs.getLong("bedrock_cooldown");
     }
 
     public static boolean isBedrockOnCooldown(String discord_id) throws SQLException {
