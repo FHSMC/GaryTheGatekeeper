@@ -82,17 +82,17 @@ public class GaryBot extends ListenerAdapter {
                                                 + "This prevents a mass use of alts, and allows us to restrict whitelisting to "
                                                 + " those with a real school email. If you wish to use an alt, or are outside of the school"
                                                 + ", then contact staff."
-                                                + "\n\n**Commands**\n```ansi\n[0;37m/whitelist set[0m - Set one of your account's usernames on the whitelist\n"
-                                                + "[0;37m/whitelist remove[0m - Remove one of your accounts from the whitelist\n```"
+                                                + "\n\n**Commands**\n```ansi\n\u001b[0;37m/whitelist set\u001b[0m - Set one of your account's usernames on the whitelist\n"
+                                                + "\u001b[0;37m/whitelist remove\u001b[0m - Remove one of your accounts from the whitelist\n```"
                                             );
                     
                     
                     if (Storage.discordUserInWhitelist(event.getUser().getId())) {
                         res.getDescriptionBuilder()
                             .append("\n**Your info**\n"
-                                    + "```ansi\n[0;37mJava Username:[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), false)
-                                    + "\n[0;37mBedrock Username:[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), true)
-                                    + "\n[0;37mEmail:[0m " + Storage.getEmailFromId(event.getUser().getId())
+                                    + "```ansi\n\u001b[0;37mJava Username:\u001b[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), false)
+                                    + "\n\u001b[0;37mBedrock Username:\u001b[0m " + Storage.getIGNFromDiscord(event.getUser().getId(), true)
+                                    + "\n\u001b[0;37mEmail:\u001b[0m " + Storage.getEmailFromId(event.getUser().getId())
                                     + "\n```");
                     }
 
