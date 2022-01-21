@@ -185,13 +185,13 @@ public class Storage {
         update("DELETE FROM whitelist WHERE uuid=\"" + uuid + "\" AND platform=" + platform);
     }
 
-    public static String getIGNFromDiscord(String discord_id, String platform) throws SQLException {
-        ResultSet rs = query("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + platform);
+    public static String getIGNFromDiscord(String discord_id, boolean bedrock) throws SQLException {
+        ResultSet rs = query("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + bedrock);
         return rs.getString("ign");
     }
 
-    public static String getDiscordFromIGN(String ign, String platform) throws SQLException {
-        ResultSet rs = query("SELECT * FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + platform);
+    public static String getDiscordFromIGN(String ign, boolean bedrock) throws SQLException {
+        ResultSet rs = query("SELECT  FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + bedrock);
         return rs.getString("discord_id");
     }
 
