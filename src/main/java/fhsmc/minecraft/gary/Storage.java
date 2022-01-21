@@ -187,12 +187,20 @@ public class Storage {
 
     public static String getIGNFromDiscord(String discord_id, boolean bedrock) throws SQLException {
         ResultSet rs = query("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + bedrock);
-        return rs.getString("ign");
+        if (!rs.isBeforeFirst()) {
+            return "None";
+        } else {
+            return rs.getString("ign");
+        }
     }
 
     public static String getDiscordFromIGN(String ign, boolean bedrock) throws SQLException {
         ResultSet rs = query("SELECT  FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + bedrock);
-        return rs.getString("discord_id");
+        if (!rs.isBeforeFirst()) {
+            return "None";
+        } else {
+            return rs.getString("discord_id");
+        }
     }
 
 }
