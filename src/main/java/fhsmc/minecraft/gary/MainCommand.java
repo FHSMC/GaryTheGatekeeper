@@ -48,12 +48,12 @@ public class MainCommand extends Command implements TabExecutor {
                     case "remove":
 
                         if (args.length != 3) {
-                            sender.sendMessage(new TextComponent("Usage: /gary remove <username> [java|bedrock]"));
+                            sender.sendMessage(new TextComponent("Usage: /gary remove <java|bedrock> <username>"));
                             break;
                         }
                         
-                        Storage.removeEntryFromIGN(args[1], args[2].equals("bedrock"));
-                        sender.sendMessage(new TextComponent("Removed username " + args[1] + " from whitelist."));
+                        Storage.removeEntryFromIGN(args[2], args[1].equals("bedrock"));
+                        sender.sendMessage(new TextComponent("Removed username " + args[2] + " from whitelist."));
                         break;
 
                     // Allow a Discord ID to use commands without auhenticating
