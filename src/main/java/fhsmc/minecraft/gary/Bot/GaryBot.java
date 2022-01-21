@@ -194,7 +194,17 @@ public class GaryBot extends ListenerAdapter {
         if (authorized) {
 
             try {
+
+                if (Storage.emailInWhitelist(email)) {
+                    event.getHook().editOriginalEmbeds(
+                            InfoEmbed.fromString(":warning: That email is already in use by another Discord account.")
+                                    .build()
+                    ).queue();
+                    return;
+                }
+
                 Storage.addDiscordId(event.getUser().getId(), email);
+
             } catch (SQLException e) {
                 event.getHook().editOriginalEmbeds(
                         InfoEmbed.fromString(":warning: There was an issue storing some information. Contact staff for help.")
