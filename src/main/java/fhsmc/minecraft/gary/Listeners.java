@@ -33,6 +33,12 @@ public class Listeners implements Listener {
                             player.getName().startsWith(".")
                     );
                 }
+
+                if (Storage.isDiscordIdDisabled(
+                        Storage.getDiscordFromIGN(player.getName(), player.getName().startsWith("."))
+                    )) {
+                        player.disconnect(new TextComponent(Config.getString("messages.discord-disabled")));
+                }
             }
         } catch (SQLException e) {
             player.disconnect(new TextComponent(Config.getString("messages.whitelist-check-error")));

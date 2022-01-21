@@ -18,3 +18,6 @@ messages:
 
   # Shown during an error in checking the database
   whitelist-check-error: There was an error while checking the whitelist.
+
+  # Shown when an account is disconnected because it is disabled
+  discord-disabled: Your account has been disabled.
