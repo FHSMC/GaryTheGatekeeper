@@ -194,7 +194,7 @@ public class GaryBot extends ListenerAdapter {
         if (authorized) {
 
             try {
-                Storage.addDiscordId(event.getUser().getId());
+                Storage.addDiscordId(event.getUser().getId(), email);
             } catch (SQLException e) {
                 event.getHook().editOriginalEmbeds(
                         InfoEmbed.fromString(":warning: There was an issue storing some information. Contact staff for help.")
