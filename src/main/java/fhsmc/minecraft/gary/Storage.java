@@ -114,6 +114,16 @@ public class Storage {
     public static boolean emailInWhitelist(String email) throws SQLException {
         return booleanQuery("SELECT * FROM authenticated_users WHERE email=\"" + email + "\"");
     }
+
+    public static String getEmailFromId(String discordid) throws SQLException {
+        ResultSet rs = query("SELECT * FROM authenticated_users WHERE id=" + discordid);
+        return rs.getString("email");
+    }
+
+    public static String getIdFromEmail(String email) throws SQLException {
+        ResultSet rs = query("SELECT * FROM authenticated_users WHERE id=\"" + email + "\"");
+        return rs.getString("email");
+    }
     
     // Whitelist/Minecraft methods
 
@@ -173,6 +183,16 @@ public class Storage {
     public static void removeEntryFromUUID(String uuid, boolean bedrock) throws SQLException {
         String platform = bedrock ? "1" : "0";
         update("DELETE FROM whitelist WHERE uuid=\"" + uuid + "\" AND platform=" + platform);
+    }
+
+    public static String getIGNFromDiscord(String discord_id, String platform) throws SQLException {
+        ResultSet rs = query("SELECT * FROM whitelist WHERE discord_id=" + discord_id + " AND platform=" + platform);
+        return rs.getString("ign");
+    }
+
+    public static String getDiscordFromIGN(String ign, String platform) throws SQLException {
+        ResultSet rs = query("SELECT * FROM whitelist WHERE ign=\"" + ign + "\" AND platform=" + platform);
+        return rs.getString("discord_id");
     }
 
 }
