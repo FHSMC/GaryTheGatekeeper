@@ -57,13 +57,14 @@ public class AuthFlow {
     public void sendFirstEmbed(SlashCommandEvent event) {
         event.getHook().editOriginalEmbeds(InfoEmbed.fromString("To get whitelisted, we need to make sure you have a valid school email. "
                 + "Follow the instructions below:\n\n"
-                + "- Go to "
+                + "Go to "
                 + this.data.getString("verification_url")
                 + " and enter the following code: "
                 + "**`" + this.data.getString("user_code") + "`**\n\n"
-                + "- Log in with your school google account\n\nAfterword you will be able to whitelist your Minecraft account.\n"
-                + "*We do not store your email or anything else about your Google account. "
-                + "This only needs to be done once to confirm you have a valid school email.*\n\n").build()
+                + "Log in with your `"
+                + Config.getString("google.email-suffix")
+                + "` email. Afterword you will be able to whitelist your Minecraft account.\n"
+                ).build()
         ).queue();
     }
 
