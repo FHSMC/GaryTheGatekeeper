@@ -121,7 +121,7 @@ public class Storage {
     }
 
     public static String getIdFromEmail(String email) throws SQLException {
-        ResultSet rs = query("SELECT * FROM authenticated_users WHERE id=\"" + email + "\"");
+        ResultSet rs = query("SELECT * FROM authenticated_users WHERE email=\"" + email + "\"");
         return rs.getString("email");
     }
     
