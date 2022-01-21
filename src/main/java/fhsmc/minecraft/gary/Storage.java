@@ -122,7 +122,7 @@ public class Storage {
 
     public static String getIdFromEmail(String email) throws SQLException {
         ResultSet rs = query("SELECT * FROM authenticated_users WHERE email=\"" + email + "\"");
-        return rs.getString("email");
+        return rs.getString("id");
     }
     
     // Whitelist/Minecraft methods
