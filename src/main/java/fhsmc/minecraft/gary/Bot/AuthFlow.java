@@ -64,6 +64,7 @@ public class AuthFlow {
                 + "Log in with your `"
                 + Config.getString("google.email-suffix")
                 + "` email. Afterword you will be able to whitelist your Minecraft account.\n"
+                + "[What is being stored from me logging in?](https://github.com/FHSMC/GaryTheGatekeeper/tree/master#what-does-gary-store)"
                 ).build()
         ).queue();
     }
